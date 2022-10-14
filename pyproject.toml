@@ -6,6 +6,10 @@ authors = ["JulianSobott <julian.sobott@mail.com>"]
 packages = [
     { include = "logfmt"},
 ]
+homepage = "https://github.com/JulianSobott/python-logfmt"
+repository = "https://github.com/JulianSobott/python-logfmt"
+issue_tracker = "https://github.com/JulianSobott/python-logfmt/issues"
+license = "MIT"
 
 
 [tool.poetry.dependencies]
