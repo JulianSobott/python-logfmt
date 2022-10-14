@@ -4,6 +4,7 @@ Logging Formatter to format log messages in [logfmt format](https://www.brandur.
 
 [![PyPI version](https://badge.fury.io/py/logfmt-julian-sobott.svg)](https://badge.fury.io/py/logfmt-julian-sobott)
 ![publish workflow](https://github.com/JulianSobott/python-logfmt/actions/workflows/python-publish.yml/badge.svg)
+![test workflow](https://github.com/JulianSobott/python-logfmt/actions/workflows/python-test.yml/badge.svg)
 
 > Logfmt is a simple text-based format for structured logging. It is designed to be easy to read by both humans and machines. 
 > It is also designed to be easy to parse and generate.
