@@ -57,10 +57,12 @@ class LogFmtFormatter(logging.Formatter):
         fmt=DEFAULT_LOGFMT_FORMAT,
         datefmt=DEFAULT_DATE_FORMAT,
         style="%",
+        ignore_dunder=True,
         *args,
         **kwargs,
     ):
         super().__init__(fmt, datefmt, style, *args, **kwargs)
+        self.ignore_dunder = ignore_dunder
         if self.EXTRA_MDC_KEY in fmt:
             self.add_mdcs = True
             included_keys = set()
@@ -77,7 +79,7 @@ class LogFmtFormatter(logging.Formatter):
         if self.add_mdcs:
             key_values = {}
             for attr, value in record.__dict__.items():
-                if attr not in self.ALL_DEFAULT_KEYS:
+                if attr not in self.ALL_DEFAULT_KEYS and (not self.ignore_dunder or not attr.startswith("__")):
                     key_values[attr] = self._format_value(value)
             for key, value in get_mdc_fields().items():
                 key_values[key] = self._format_value(value)

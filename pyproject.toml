@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "logfmt-julian-sobott"
-version = "0.1.0"
+version = "0.2.0"
 description = "Logging Formatter to format log messages in logfmt format"
 authors = ["JulianSobott <julian.sobott@mail.com>"]
 packages = [

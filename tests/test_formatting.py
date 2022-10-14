@@ -54,6 +54,12 @@ def test_log_context_dict(logger_handler):
     assert handler.last_line == 'level=INFO msg="Hello World" foo=bar'
 
 
+def test_ignore_dunder(logger_handler):
+    logger, handler = logger_handler
+    logger.info("Hello World", extra={"__foo": "bar"})
+    assert handler.last_line == 'level=INFO msg="Hello World" '
+
+
 def test_log_context_kwargs(logger_handler):
     logger, handler = logger_handler
     with LogContext(foo="bar"):
