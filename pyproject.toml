@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "logfmt-julian-sobott"
+version = "0.1.0"
+description = "Logging Formatter to format log messages in logfmt format"
+authors = ["JulianSobott <julian.sobott@mail.com>"]
+packages = [
+    { include = "logfmt"},
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.3"
+black = "^22.10.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
