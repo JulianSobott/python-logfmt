@@ -5,7 +5,13 @@ from contextlib import contextmanager
 import collections.abc
 import inspect
 
-__all__ = ["new_log_context", "callable_context", "LogFmtFormatter", "LogContext", "CallableLogContext"]
+__all__ = [
+    "new_log_context",
+    "callable_context",
+    "LogFmtFormatter",
+    "LogContext",
+    "CallableLogContext",
+]
 
 
 logging._mdc = threading.local()
@@ -79,7 +85,9 @@ class LogFmtFormatter(logging.Formatter):
         if self.add_mdcs:
             key_values = {}
             for attr, value in record.__dict__.items():
-                if attr not in self.ALL_DEFAULT_KEYS and (not self.ignore_dunder or not attr.startswith("__")):
+                if attr not in self.ALL_DEFAULT_KEYS and (
+                    not self.ignore_dunder or not attr.startswith("__")
+                ):
                     key_values[attr] = self._format_value(value)
             for key, value in get_mdc_fields().items():
                 key_values[key] = self._format_value(value)
@@ -91,10 +99,10 @@ class LogFmtFormatter(logging.Formatter):
         return super().format(record)
 
     def formatStack(self, stack_info: str) -> str:
-        return "stack=\"\n" + self._format_value(stack_info)
+        return 'stack="\n' + self._format_value(stack_info)
 
     def formatException(self, ei) -> str:
-        return "exception=\"\n" + self._format_value(super().formatException(ei))[1:]
+        return 'exception="\n' + self._format_value(super().formatException(ei))[1:]
 
     def _format_value(self, value):
         if isinstance(value, self.BASE_TYPES):
@@ -143,9 +151,12 @@ def new_log_context(*args, **kwargs):
         delattr(logging._mdc, context_id)
 
 
-def callable_context(*args: str):
-    args_to_watch = set(args)
-    log_all = not args_to_watch
+def callable_context(*args: str, **kwargs: str):
+    param_mapping = [(arg, arg) for arg in args] + [
+        (alias, arg) for alias, arg in kwargs.items()
+    ]
+    log_all = not param_mapping
+    unsafe = False  # Keeping this for future use
 
     def decorator(func):
         signature = inspect.signature(func)
@@ -153,7 +164,16 @@ def callable_context(*args: str):
         def wrapper(*args, **kwargs):
             bound_arguments = signature.bind(*args, **kwargs)
             if not log_all:
-                ctx = {arg: bound_arguments.arguments[arg] for arg in args_to_watch}
+                ctx = {}
+                for alias, arg in param_mapping:
+                    if unsafe:
+                        ctx[alias] = eval(arg, bound_arguments.arguments)
+                    else:
+                        components = arg.split(".")
+                        value = bound_arguments.arguments[components[0]]
+                        for attr in components[1:]:
+                            value = getattr(value, attr, None)
+                        ctx[alias] = value
             else:
                 ctx = bound_arguments.arguments
             with new_log_context(ctx):

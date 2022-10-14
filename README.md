@@ -76,6 +76,18 @@ def foo(name: str, surname: str, *args):
 foo("bar with spaces", "baz", "qux")
 # ts=2022-10-14T17:45:58+0200 lvl=INFO msg="Hello World" args=('qux',) name="bar with spaces"
 
+from dataclasses import dataclass
+@dataclass
+class Person:
+    name: str
+
+@CallableLogContext(name="person.name")
+def foo(person: Person):
+    logger.info("Hello World")
+
+foo(Person(name="Tom"))
+# ts=2022-10-15T00:56:16+0200 lvl=INFO msg="Hello World" name=Tom
+
 try:
     raise Exception("Something went wrong")
 except Exception as e:

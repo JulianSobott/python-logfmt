@@ -91,6 +91,55 @@ def test_static_function_decorator(logger_handler):
     assert handler.last_line == 'level=INFO msg="Hello World" foo=bar'
 
 
+def test_function_decorator_sub_attribute(logger_handler):
+    logger, handler = logger_handler
+
+    @dataclass
+    class Foo:
+        name: str
+
+    @CallableLogContext("c.name")
+    def foo(c: Foo):
+        logger.info("Hello World")
+
+    foo(Foo("Tom"))
+    assert handler.last_line == 'level=INFO msg="Hello World" c.name=Tom'
+
+
+def test_function_decorator_alias_deep_sub_attribute(logger_handler):
+    logger, handler = logger_handler
+
+    @dataclass
+    class Foo:
+        name: str
+
+    @dataclass
+    class Bar:
+        foo: Foo
+
+    @CallableLogContext(name="c.foo.name")
+    def foo(c: Bar):
+        logger.info("Hello World")
+
+    foo(Bar(Foo("Jerry")))
+    assert handler.last_line == 'level=INFO msg="Hello World" name=Jerry'
+
+
+def test_function_decorator_sub_non_attribute(logger_handler):
+    logger, handler = logger_handler
+
+    @dataclass
+    class Foo:
+        name: str
+
+    @CallableLogContext("c.non_existing")
+    def foo(c: Foo):
+        logger.info("Hello World")
+
+    foo(Foo("Tom"))
+    assert handler.last_line == 'level=INFO msg="Hello World" c.non_existing=None'
+
+
 def test_function_decorator_args(logger_handler):
     logger, handler = logger_handler
 
