@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "logfmt-julian-sobott"
-version = "0.2.0"
+version = "0.3.0"
 description = "Logging Formatter to format log messages in logfmt format"
-authors = ["JulianSobott <julian.sobott@mail.com>"]
+authors = ["JulianSobott <julian.sobott@gmail.com>"]
 packages = [
     { include = "logfmt"},
 ]
@@ -16,10 +16,11 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Topic :: System :: Logging",
 ]
-
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"

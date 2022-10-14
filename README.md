@@ -75,4 +75,15 @@ def foo(name: str, surname: str, *args):
     logger.info("Hello World")
 foo("bar with spaces", "baz", "qux")
 # ts=2022-10-14T17:45:58+0200 lvl=INFO msg="Hello World" args=('qux',) name="bar with spaces"
+
+try:
+    raise Exception("Something went wrong")
+except Exception as e:
+    logger.exception("trying to fix it")
+# ts=2022-10-14T22:49:31+0200 lvl=ERROR msg="trying to fix it" 
+# exception="
+# Traceback (most recent call last):
+#   File \"/src/tests/x.py\", line 17, in <module>
+#     raise Exception(\"Something went wrong\")
+# Exception: Something went wrong"
 ```

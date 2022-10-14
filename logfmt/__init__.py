@@ -90,6 +90,12 @@ class LogFmtFormatter(logging.Formatter):
             setattr(record, self.EXTRA_MDC_KEY, extra_args)
         return super().format(record)
 
+    def formatStack(self, stack_info: str) -> str:
+        return "stack=\"\n" + self._format_value(stack_info)
+
+    def formatException(self, ei) -> str:
+        return "exception=\"\n" + self._format_value(super().formatException(ei))[1:]
+
     def _format_value(self, value):
         if isinstance(value, self.BASE_TYPES):
             formatted = value
@@ -102,7 +108,7 @@ class LogFmtFormatter(logging.Formatter):
                 or "\n" in formatted
                 or "\t" in formatted
             ):
-                formatted.replace('"', r"\"")
+                formatted = formatted.replace('"', r"\"")
                 formatted = f'"{formatted}"'
 
         except Exception:

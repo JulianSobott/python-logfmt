@@ -144,3 +144,20 @@ def test_multiple_threads(logger_handler):
         t.join()
     for i in range(5):
         assert f'level=INFO msg="Hello World" foo={i}' in handler.lines
+
+
+def test_exception(logger_handler):
+    logger, handler = logger_handler
+    try:
+        raise Exception("Test")
+    except Exception:
+        logger.exception("Hello World")
+    assert 'level=ERROR msg="Hello World" \nexception="\n' in handler.last_line
+    assert 'Exception: Test"' in handler.last_line
+
+
+def test_stack_info(logger_handler):
+    logger, handler = logger_handler
+    logger.info("Hello World", stack_info=True)
+    assert 'level=INFO msg="Hello World" \nstack="\n' in handler.last_line
+    assert 'logger.info(\\"Hello World\\", stack_info=True)"' in handler.last_line
