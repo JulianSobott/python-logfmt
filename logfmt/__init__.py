@@ -115,6 +115,7 @@ class LogFmtFormatter(logging.Formatter):
                 or '"' in formatted
                 or "\n" in formatted
                 or "\t" in formatted
+                or "=" in formatted
             ):
                 formatted = formatted.replace('"', r"\"")
                 formatted = f'"{formatted}"'

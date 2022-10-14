@@ -47,6 +47,28 @@ def test_extra(logger_handler):
     assert handler.last_line == 'level=INFO msg="Hello World" foo=bar'
 
 
+@dataclass
+class Person:
+    name: str
+
+
+@pytest.mark.parametrize(
+    "extra,expected",
+    [
+        ({"foo": "bar"}, 'foo=bar'),
+        ({"foo": "bar 2"}, 'foo="bar 2"'),
+        ({"foo": "\"bar 2\""}, r'foo="\"bar 2\""'),
+        ({"foo": "bar\n2"}, 'foo="bar\n2"'),
+        ({"foo": "bar\t2"}, 'foo="bar\t2"'),
+        ({"foo": Person("Jerry")}, 'foo="Person(name=\'Jerry\')"'),
+],
+)
+def test_escape(logger_handler, extra, expected):
+    logger, handler = logger_handler
+    logger.info("Hello World", extra=extra)
+    assert handler.last_line == f'level=INFO msg="Hello World" {expected}'
+
+
 def test_log_context_dict(logger_handler):
     logger, handler = logger_handler
     with LogContext({"foo": "bar"}):
